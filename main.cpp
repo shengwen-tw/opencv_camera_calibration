@@ -82,19 +82,35 @@ void estimate_intrinsic_parameters()
 	}
 
 	for(int i = 0; i < image_names.size(); i++) {
-		Mat image = imread(image_names[i], CV_LOAD_IMAGE_GRAYSCALE); 
+		Mat image = imread(image_names[i], CV_LOAD_IMAGE_GRAYSCALE);
 
-		findChessboardCorners(image, board_size, _2d_corners); 
+		findChessboardCorners(image, board_size, _2d_corners);
 		TermCriteria param(TermCriteria::MAX_ITER + TermCriteria::EPS, 30, 0.1);
-		cornerSubPix(image, _2d_corners, Size(5, 5), Size(-1, -1), param);  
-		if(_2d_corners.size() == board_size.area()) { 
-			add_board_points(_2d_corners, _3d_corners); 
+		cornerSubPix(image, _2d_corners, Size(5, 5), Size(-1, -1), param);
+		if(_2d_corners.size() == board_size.area()) {
+			add_board_points(_2d_corners, _3d_corners);
 		} 
 	} 
 
 	calibrateCamera(object_3d_points, image_2d_points, image_size,
-			camera_matrix, dist_coeffs, rvecs, tvecs);  
+			camera_matrix, dist_coeffs, rvecs, tvecs);
+
+	cout << "camera matrix:\n";
+	cout.precision(5);
+	for(int i = 0; i < 3; i++) {
+		cout << "["  << camera_matrix.at<double>(i, 0)
+		     << ", " << camera_matrix.at<double>(i, 1)
+		     << ", " << camera_matrix.at<double>(i, 2) << "]\n";
+	}
+
+	cout << "distort coefficients:\n";
+	cout << "[" << dist_coeffs.at<double>(0, 0)
+	     << ", " << dist_coeffs.at<double>(0, 1)
+	     << ", " << dist_coeffs.at<double>(0, 2)
+	     << ", " << dist_coeffs.at<double>(0, 3)
+	     << ", " << dist_coeffs.at<double>(0, 4) << "]\n";
 }
+
 
 void undistort_image(const Mat &src, Mat &dst)
 {
