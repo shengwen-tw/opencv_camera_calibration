@@ -5,8 +5,7 @@ CC=g++
 CFLAGS=`pkg-config opencv --cflags` `pkg-config opencv --libs`
 
 CFLAGS+=-I./
-SRC+=calibration.cpp \
-	main.cpp
+SRC+=main.cpp
 
 all:$(EXECUTABLE)
 
