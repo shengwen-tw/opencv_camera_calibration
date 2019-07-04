@@ -36,6 +36,9 @@ void CameraCalibrator::addChessboardPoints()
 
 	for(int i=0; i<m_filenames.size(); i++){ 
 		Mat image=imread(m_filenames[i],CV_LOAD_IMAGE_GRAYSCALE); 
+
+		imageSize = image.size();
+
 		findChessboardCorners(image, m_borderSize, srcCandidateCorners); 
 		TermCriteria param(TermCriteria::MAX_ITER + TermCriteria::EPS, 30, 0.1);
 		cornerSubPix(image, srcCandidateCorners, Size(5,5), Size(-1,-1), param);  
@@ -52,11 +55,15 @@ void CameraCalibrator::addPoints(const vector<Point2f> &srcCorners,
 	m_dstPoints.push_back(dstCorners);
 } 
 
-void CameraCalibrator::calibrate(const Mat &src, Mat &dst)
+void CameraCalibrator::calibrate()
 {
-	Size imageSize = src.size(); 
-	Mat cameraMatrix, distCoeffs, map1, map2; 
-	vector<Mat> rvecs, tvecs; 
+	calibrateCamera(m_dstPoints, m_srcPoints, imageSize, cameraMatrix,
+			distCoeffs, rvecs, tvecs);  
+}
+
+void CameraCalibrator::undistort_image(const Mat &src, Mat &dst)
+{
+	Mat map1, map2; 
 
 	calibrateCamera(m_dstPoints, m_srcPoints, imageSize, cameraMatrix,
 			distCoeffs, rvecs, tvecs);  

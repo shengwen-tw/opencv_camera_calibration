@@ -4,8 +4,8 @@
 #define IMAGE_WIDTH  1920
 #define IMAGE_HEIGHT 1080
 
-#define CHECKERBOARD_WIDTH  7
-#define CHECKERBOARD_HEIGHT 5
+#define CHECKERBOARD_WIDTH  8
+#define CHECKERBOARD_HEIGHT 6
 
 #define CALIB_IMG_SAMPLE_SIZE 15
 
@@ -19,7 +19,7 @@ void on_click_callback(int event, int x, int y, int flags, void* param)
 {
 	char img_save_path[100] = "";
 
-	if(event==CV_EVENT_LBUTTONDOWN) {
+	if((event == CV_EVENT_LBUTTONDOWN) && (image_count <= CALIB_IMG_SAMPLE_SIZE)) {
 		sprintf(img_save_path, "/tmp/intrinsic_%dx%d_%d.jpg", IMAGE_WIDTH,
 		        IMAGE_HEIGHT, image_count);
 		imwrite(img_save_path, frame);
@@ -53,13 +53,16 @@ int main()
 	myCameraCalibrator.setFilename(); 
 	myCameraCalibrator.setBorderSize(Size(CHECKERBOARD_WIDTH,CHECKERBOARD_HEIGHT));
 	myCameraCalibrator.addChessboardPoints();
+	myCameraCalibrator.calibrate();
 
-	//Mat src = imread("chessboard09.jpg",0);
-	//Mat dst;
-	//myCameraCalibrator.calibrate(src, dst);
+	Mat raw_image, undistorted_image;
 
-	//imshow("Original Image", src);
-	//imshow("Undistorted Image", dst);
+	while(1) {
+		camera >> raw_image;
+		myCameraCalibrator.undistort_image(raw_image, undistorted_image);
+		imshow("intrinsic calibration", undistorted_image);
+		cv::waitKey(30);
+	}
 
 	destroyAllWindows();
 	return 0;
