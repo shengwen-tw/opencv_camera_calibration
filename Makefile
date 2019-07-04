@@ -3,6 +3,7 @@ EXECUTABLE=intrinsic_calibration
 CC=g++
 
 CFLAGS=`pkg-config opencv --cflags` `pkg-config opencv --libs`
+CFLAGS+=-lyaml-cpp
 
 CFLAGS+=-I./
 SRC+=main.cpp
