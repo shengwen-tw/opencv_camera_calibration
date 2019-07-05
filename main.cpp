@@ -95,6 +95,7 @@ void estimate_intrinsic_parameters()
 	calibrateCamera(object_3d_points, image_2d_points, image_size,
 			camera_matrix, dist_coeffs, rvecs, tvecs);
 
+	/* print calibration result to screen */
 	cout << "camera matrix:\n";
 	cout.precision(5);
 	for(int i = 0; i < 3; i++) {
@@ -109,6 +110,28 @@ void estimate_intrinsic_parameters()
 	     << ", " << dist_coeffs.at<double>(0, 2)
 	     << ", " << dist_coeffs.at<double>(0, 3)
 	     << ", " << dist_coeffs.at<double>(0, 4) << "]\n";
+
+	/* save calibration result into yaml */
+	ofstream fout("intrinsic_calibration.yaml");
+	fout << "camera_matrix: |\n  ["
+	     << fixed << setprecision(5);
+	for(int i = 0; i < 3; i++) {
+		fout << camera_matrix.at<double>(i, 0)
+		     << ", " << camera_matrix.at<double>(i, 1)
+		     << ", " << camera_matrix.at<double>(i, 2);
+
+		if(i < 2) {
+			fout << ",\n  ";
+		}
+	}
+	fout << "]\n";
+
+	fout << "distortion_coefficients: "
+	     << "[" << dist_coeffs.at<double>(0, 0)
+	     << ", " << dist_coeffs.at<double>(0, 1)
+	     << ", " << dist_coeffs.at<double>(0, 2)
+	     << ", " << dist_coeffs.at<double>(0, 3)
+	     << ", " << dist_coeffs.at<double>(0, 4) << "]";
 }
 
 
