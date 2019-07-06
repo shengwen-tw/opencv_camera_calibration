@@ -142,8 +142,6 @@ void undistort_image(const Mat &src, Mat &dst)
 {
 	Mat map1, map2; 
 
-	calibrateCamera(object_3d_points, image_2d_points, image_size, camera_matrix,
-			dist_coeffs, rvecs, tvecs);  
 	initUndistortRectifyMap(camera_matrix, dist_coeffs, Mat(), Mat(),
 				image_size, CV_32F, map1, map2); 
 	remap(src, dst, map1, map2, INTER_LINEAR); 
