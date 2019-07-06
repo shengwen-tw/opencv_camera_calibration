@@ -1,4 +1,5 @@
-#include <stdio.h>
+#include <iostream>
+#include <iomanip>
 #include <opencv2/opencv.hpp>
 
 #define IMAGE_WIDTH  640
@@ -95,6 +96,8 @@ void estimate_intrinsic_parameters()
 	calibrateCamera(object_3d_points, image_2d_points, image_size,
 			camera_matrix, dist_coeffs, rvecs, tvecs);
 
+	cout << fixed << setprecision(5);
+
 	/* print calibration result to screen */
 	cout << "camera matrix:\n";
 	cout.precision(5);
@@ -113,7 +116,7 @@ void estimate_intrinsic_parameters()
 
 	/* save calibration result into yaml */
 	ofstream fout("intrinsic_calibration.yaml");
-	fout << "camera_matrix: |\n  ["
+	fout << "camera_matrix: \n  ["
 	     << fixed << setprecision(5);
 	for(int i = 0; i < 3; i++) {
 		fout << camera_matrix.at<double>(i, 0)
