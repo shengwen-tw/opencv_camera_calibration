@@ -4,6 +4,7 @@
 
 #define IMAGE_WIDTH  640
 #define IMAGE_HEIGHT 480
+#define SQUARE_SIZE  0.29
 
 #define BOARD_WIDTH  6
 #define BOARD_HEIGHT 8
@@ -78,7 +79,8 @@ void estimate_intrinsic_parameters()
 
 	for(int i = 0; i < board_size.height; i++) {
 		for(int j = 0; j < board_size.width; j++){
-			_3d_corners.push_back(Point3f(i, j, 0.0f));
+			_3d_corners.push_back(Point3f((float)i * SQUARE_SIZE,
+						      (float)j * SQUARE_SIZE, 0.0f));
 		}
 	}
 
@@ -100,7 +102,7 @@ void estimate_intrinsic_parameters()
 
 	/* print calibration result to screen */
 	cout << "camera matrix:\n";
-	cout.precision(5);
+
 	for(int i = 0; i < 3; i++) {
 		cout << "["  << camera_matrix.at<double>(i, 0)
 		     << ", " << camera_matrix.at<double>(i, 1)
@@ -135,6 +137,8 @@ void estimate_intrinsic_parameters()
 	     << ", " << dist_coeffs.at<double>(0, 2)
 	     << ", " << dist_coeffs.at<double>(0, 3)
 	     << ", " << dist_coeffs.at<double>(0, 4) << "]";
+
+	cout << "calibration succeeded, press ctrl+c to leave.\n";
 }
 
 
